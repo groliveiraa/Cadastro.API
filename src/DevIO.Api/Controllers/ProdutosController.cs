@@ -17,7 +17,6 @@ namespace DevIO.Api.Controllers
     {
         private readonly IProdutoRepository _produtoRepository;
         private readonly IProdutoService _produtoService;
-        private readonly INotificador _notificador;
         private readonly IMapper _mapper;
 
         public ProdutosController(IProdutoRepository produtoRepository, IProdutoService produtoService, IMapper mapper,
@@ -75,15 +74,15 @@ namespace DevIO.Api.Controllers
 
         private bool UploadArquivo(string arquivo, string imgNome)
         {
-            var imageDataByteArray = Convert.FromBase64String(arquivo);
-
             if (string.IsNullOrEmpty(arquivo))
             {
                 NotificarErro("Forneça uma imagem para este produto!");
                 return false;
             }
 
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/imagens", imgNome);
+            var imageDataByteArray = Convert.FromBase64String(arquivo);
+
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/app/demo-webapi/src/assets", imgNome);
 
             if(System.IO.File.Exists(filePath))
             {
