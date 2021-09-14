@@ -25,7 +25,7 @@ namespace DevIO.Api.Controllers
         private readonly IMapper _mapper;
 
         public FornecedoresController(IFornecedorRepository fornecedorRepository, IFornecedorService fornecedorService, 
-            IEnderecoRepository enderecoRepository, IMapper mapper, INotificador notificador) : base(notificador)
+            IEnderecoRepository enderecoRepository, IMapper mapper, INotificador notificador, IUser user) : base(notificador, user)
         {
             _fornecedorRepository = fornecedorRepository;
             _fornecedorServices = fornecedorService;
