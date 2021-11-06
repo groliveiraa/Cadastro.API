@@ -3,12 +3,14 @@ using DevIO.Api.ViewModels;
 using DevIO.Business.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MinhaAPICore.Controllers;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -24,16 +26,19 @@ namespace DevIO.Api.Controllers.V1
         private readonly SignInManager<IdentityUser> _singnInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AppSettings _appSettings;
+        private readonly ILogger _logger;
 
         public AuthController(INotificador notificador, 
                                 SignInManager<IdentityUser> singnInManager,
                                 UserManager<IdentityUser> userManager,
                                 IOptions<AppSettings> appSettings,
-                                IUser user) : base(notificador, user)
+                                IUser user, 
+                                ILogger<AuthController> logger) : base(notificador, user)
         {
             _singnInManager = singnInManager;
             _userManager = userManager;
             _appSettings = appSettings.Value;
+            _logger = logger;
         }
 
         [HttpPost("register")]
@@ -72,6 +77,7 @@ namespace DevIO.Api.Controllers.V1
 
             if (result.Succeeded)
             {
+                _logger.LogInformation("Usuário " + loginUser.Email + " logado com sucesso: " + DateTime.Now.ToString());
                 return CustomResponse(await GerarJwt(loginUser.Email));
             }
             if (result.IsLockedOut)
